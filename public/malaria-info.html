@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Upload Image</title>
+</head>
+
+<body>
+    <form enctype="multipart/form-data">
+        <input type="file" id="fileInput">
+        <button type="button" onclick="uploadImage()">Submit</button>
+    </form>
+    <script>
+        async function uploadImage() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+
+            reader.onload = async () => {
+                const base64Image = reader.result.split(',')[1];
+                // Send the base64Image to the backend
+                console.log(base64Image)
+            };
+        }
+    </script>
+</body>
+
+</html>

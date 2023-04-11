@@ -1,0 +1,33 @@
+const express = require('express');
+const bodyParser = require('body-parser');
+const middleware = require('./middleware');
+const userRoute = require('./routes/userRoutes');
+const malariInfoRoute = require('./routes/malariaInfoRoutes');
+
+const mongoose = require('mongoose');
+
+const MONGODB_URL = "mongodb://127.0.0.1:27017/malaria";
+
+
+mongoose.connect(MONGODB_URL, {
+    useNewUrlParser:true
+})
+const app = express();
+
+app.use(bodyParser.json({ limit: '10mb' })); 
+// Apply middleware
+app.use(middleware);
+app.use('/users', userRoute);
+app.use('/malaria-info', malariInfoRoute);
+
+
+// Define routes
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+
+// Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
+});
