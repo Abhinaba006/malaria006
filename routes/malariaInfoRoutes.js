@@ -27,6 +27,18 @@ const upload = multer({
 
 //please save me//
 
+async function compressImage(inputBuffer, maxWidth = 300, quality = 50) {
+    try {
+      const compressedBuffer = await sharp(inputBuffer)
+        .resize({ width: maxWidth })
+        .jpeg({ quality: quality })
+        .toBuffer();
+      return compressedBuffer;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
 
 router.post('/:user_id', cors(), upload.single('image'), async (req, res) => {
     try {
@@ -36,7 +48,7 @@ router.post('/:user_id', cors(), upload.single('image'), async (req, res) => {
             created_by: new mongoose.Types.ObjectId(req.params.user_id),
             total_images:prediction[0],
             infected_images:prediction[1],
-            image:buffer
+            image:await compressImage(buffer)
         })
 
         await malaria_info.save();
@@ -84,7 +96,7 @@ router.get('/',  cors(),async (req, res) => {
 });
 
 // Get malaria info by user id
-router.get('/{created_by}', cors(),async (req, res) => {
+router.get('/:created_by', cors(),async (req, res) => {
     try {
         const userId = req.params.created_by;
         const malariaInfo = await MalariaInfoService.getMalariaInfoByUserId(userId);
