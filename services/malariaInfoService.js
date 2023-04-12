@@ -15,7 +15,7 @@ class MalariaInfoService {
 
   async getMalariaInfoById(malariaInfoId) {
     try {
-      const malariaInfo = await MalariaInfo.findById(malariaInfoId);
+      const malariaInfo = await MalariaInfo.findById(malariaInfoId).populate('user');;
       if (!malariaInfo) throw new Error('Malaria Info not found');
       return malariaInfo;
     } catch (error) {
@@ -44,7 +44,7 @@ class MalariaInfoService {
   }
 
   async getAllMalariaInfo() {
-    const malariaInfo = await MalariaInfo.find();
+    const malariaInfo = await MalariaInfo.find().populate('created_by');
     return malariaInfo;
   }
   
