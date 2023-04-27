@@ -11,11 +11,11 @@ const MONGODB_URL = "mongodb://127.0.0.1:27017/malaria";
 
 
 mongoose.connect(MONGODB_URL, {
-    useNewUrlParser:true
+  useNewUrlParser: true
 })
 const app = express();
-
-app.use(bodyParser.json({ limit: '10mb' })); 
+app.use(cors());
+app.use(bodyParser.json({ limit: '10mb' }));
 // Apply middleware
 app.use(middleware);
 app.use('/users', userRoute);
@@ -26,17 +26,21 @@ app.disable('etag');
 app.disable('x-xss-protection');
 app.disable('strict-transport-security');
 app.disable('content-security-policy');
-const corsOptions = {
-  origin: false,
-  optionsSuccessStatus: 204
-};
-app.use(cors(corsOptions));
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  next();
-});
+// const corsOptions = {
+//   origin: false,
+//   optionsSuccessStatus: 204
+// };
+// app.use(cors(corsOptions));
+// 
+// app.use((req, res, next) => {
+//   res.setHeader('Access-Control-Allow-Origin', '*');
+//   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+//   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+//   res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:5500');
+//   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+//   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+//   next();
+// });
 
 
 // Define routes

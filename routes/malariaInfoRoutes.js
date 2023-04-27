@@ -8,6 +8,10 @@ const MalariaInfoService = require('../services/malariaInfoService');
 const detectObjectsInImage = require('../modelHelper');
 const MalariaInfo = require('../models/malaria_info');
 
+
+const authMiddleware = require('../middlewares/auth');
+
+
 // Set up Multer middleware to handle file uploads
 const upload = multer({
     fileFilter: (req, file, cb) => {
@@ -17,7 +21,7 @@ const upload = multer({
         cb(null, true)
     },
     limits: {
-        fileSize: 1000000
+        fileSize: 100000000
     },
     fieldName: 'image',
     storage: multer.memoryStorage() // specify the field name for the uploaded file
@@ -40,12 +44,14 @@ async function compressImage(inputBuffer, maxWidth = 300, quality = 50) {
     }
   }
 
-router.post('/:user_id', cors(), upload.single('image'), async (req, res) => {
+router.post('/', upload.single('image'), authMiddleware, async (req, res) => {
     try {
+        console.log(req.file)
         const buffer = req.file.buffer;
         const prediction = await detectObjectsInImage(buffer)
         const malaria_info = new MalariaInfo({
-            created_by: new mongoose.Types.ObjectId(req.params.user_id),
+            title:'image#'+await MalariaInfo.countDocuments(),
+            created_by: new mongoose.Types.ObjectId(req.user._id),
             total_images:prediction[0],
             infected_images:prediction[1],
             image:await compressImage(buffer)
@@ -53,52 +59,17 @@ router.post('/:user_id', cors(), upload.single('image'), async (req, res) => {
 
         await malaria_info.save();
         res.status(200).send(malaria_info)
-        // console.log(req.file)
-        // await sharp(buffer)
-        //     .resize({ width: 250, height: 250 })
-        //     .jpeg()
-        //     .toFile(__dirname + `\\..\\uploads\\${req.file.originalname}.jpg`);
-        // res.status(201).send('Image uploaded successfully');
-
-
-
-        //   const metadata = await image.metadata();
-
-        //   if (metadata.format !== 'jpeg' && metadata.format !== 'png') {
-        //     console.log(35, metadata.format)
-        //     throw new Error('Invalid image formsat');
-        //   }
-        // await sharp(image).resize({ width: 250, height: 250 }).jpeg().toFile(__dirname + `/uploads/${req.file.originalname}.jpg`);
-        // res.status(201).send('Image uploaded successfully');
     } catch (error) {
         console.log(41, error);
         res.status(400).send(error.message);
     }
 });
 
-
-
-
-
-
-
-
-
-// Get all malaria info
-router.get('/',  cors(),async (req, res) => {
-    try {
-        const malariaInfo = await MalariaInfoService.getAllMalariaInfo();
-        res.json(malariaInfo);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Server Error');
-    }
-});
-
 // Get malaria info by user id
-router.get('/:created_by', cors(),async (req, res) => {
+router.get('/', cors(),authMiddleware, async (req, res) => {
     try {
-        const userId = req.params.created_by;
+        const userId = req.user._id
+        console.log(userId)
         const malariaInfo = await MalariaInfoService.getMalariaInfoByUserId(userId);
         if (malariaInfo) {
             res.json(malariaInfo);
@@ -143,7 +114,7 @@ router.get('/:created_by', cors(),async (req, res) => {
 // });
 
 // Delete malaria info by id
-router.delete('/:id', cors(),async (req, res) => {
+router.delete('/:id', cors(),authMiddleware, async (req, res) => {
     try {
         const id = req.params.id;
         const malariaInfo = await MalariaInfoService.deleteMalariaInfo(id);

@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 
 const malariaInfoSchema = new mongoose.Schema({
+    title:String,
     created_by: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     total_images: { type: Number, required: true, default:0 },
     infected_images: { type: Number, required: true, default:0 },
