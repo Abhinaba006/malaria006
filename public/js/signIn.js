@@ -41,11 +41,18 @@ signInBtn.onclick = async () => {
     nameField.style.maxHeight = "0"; // hide name field
 
     title.innerHTML = "Sign In";
-    const username = "root";
-    const password = "root";
+    const username = document.getElementById("username").value
+    document.getElementById("username").value = ""
+    const password = document.getElementById("password").value
+    document.getElementById("password").value = ""
 
-    signUpBtn.classList.add("disabled");
-    signInBtn.classList.remove("disabled");
+    console.log(username, password)
+    if (signInBtn.className === "disabled") {
+        signUpBtn.classList.add("disabled");
+        signInBtn.classList.remove("disabled");
+        return
+    }
+
 
     try {
         // Send a POST request to the login endpoint to obtain a JWT token
@@ -68,7 +75,7 @@ signInBtn.onclick = async () => {
         // Redirect the user to the dashboard or home page
         window.location.href = "/public/malaria-info.html";
     } catch (error) {
-        alert("unable to login")
+        alert("Wrong credentials, please try again!")
         console.log(error);
         // Show an error message to the user
         // ...
@@ -76,11 +83,58 @@ signInBtn.onclick = async () => {
 };
 
 
-signUpBtn.onclick = function () {
+signUpBtn.onclick = async function () {
     nameField.style.maxHeight = "60px"; // hidden
-
+    if (signUpBtn.className === "disabled") {
+        signUpBtn.classList.remove("disabled");
+        signInBtn.classList.add("disabled");
+        return
+    }
     title.innerHTML = "Sign Up";
 
-    signUpBtn.classList.remove("disabled");
-    signInBtn.classList.add("disabled");
+
+    const username = document.getElementById("username").value
+    document.getElementById("username").value = ""
+    const name = document.getElementById("name").value
+    document.getElementById("name").value = ""
+    const password = document.getElementById("password").value
+    document.getElementById("password").value = ""
+
+    try {
+        // Send a POST request to the login endpoint to obtain a JWT token
+        const r = await fetch("http://localhost:3000/users/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password, name }),
+        });
+        if(!r.ok){
+            throw new Error("Unable to signin");
+        }
+        const response = await fetch("http://localhost:3000/users/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password }),
+        });
+
+        // Handle the response
+        if (!response.ok) {
+            throw new Error("Unable to login");
+        }
+
+        const { token } = await response.json();
+
+        // Store the token in local storage
+        localStorage.setItem("token", token);
+
+        // Redirect the user to the dashboard or home page
+        window.location.href = "/public/malaria-info.html";
+
+    } catch (error) {
+        alert("Something went wrong, please try again!")
+        console.log(error);
+        // Show an error message to the user
+        // ...
+    }
+
+
 }

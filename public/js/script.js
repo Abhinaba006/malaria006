@@ -3,32 +3,32 @@ const imageInput = document.querySelector('#image');
 const previewImage = document.querySelector('#preview-image');
 
 
-// Login function
-const login = async (email, password) => {
-  try {
-    const response = await fetch('/api/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ email, password })
-    });
+// // Login function
+// const login = async (email, password) => {
+//   try {
+//     const response = await fetch('/api/login', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify({ email, password })
+//     });
 
-    const data = await response.json();
+//     const data = await response.json();
 
-    if (!response.ok) {
-      throw new Error(data.error);
-    }
+//     if (!response.ok) {
+//       throw new Error(data.error);
+//     }
 
-    // Store the JWT token in local storage
-    localStorage.setItem('token', data.token);
+//     // Store the JWT token in local storage
+//     localStorage.setItem('token', data.token);
 
-    // Redirect to the dashboard page
-    window.location.href = '/dashboard';
-  } catch (error) {
-    console.error(error);
-  }
-};
+//     // Redirect to the dashboard page
+//     window.location.href = '/dashboard';
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
 
 // Logout function
 const logout = () => {
@@ -36,7 +36,7 @@ const logout = () => {
   localStorage.removeItem('token');
 
   // Redirect to the login page
-  window.location.href = '/login';
+  window.location.href = '/public/signIn.html';
 };
 
 const fetchApi = async (url, method = 'GET', body = null) => {
@@ -84,7 +84,6 @@ imageInput.addEventListener('change', () => {
   reader.readAsDataURL(file);
 });
 
-const user_id = "64351f2e28ecaa89ed51f2fc"
 // Handle the form submission
 uploadForm.addEventListener('submit', async (event) => {
   event.preventDefault();
@@ -103,14 +102,16 @@ uploadForm.addEventListener('submit', async (event) => {
       
       const result = await response.json();
       const total = document.getElementById("total")
-      total.style.display = 'flex'
+      total.style.display = 'block'
       const infected = document.getElementById("infected")
-      infected.style.display = 'flex'
+      infected.style.display = 'block'
+      const previewcontainer = document.getElementById("preview-container")
+      previewcontainer.style.display = 'block'
       const showPreviewButton = document.querySelector('#preview-image');
 
-      document.getElementById("total").textContent += result.total_images
-      document.getElementById("infected").textContent += result.infected_images
-      showPreviewButton.style.display = 'flex';
+      document.getElementById("total").textContent = "Total RBC Found: "+result.total_images
+      document.getElementById("infected").textContent = "Total Infected RBC Found: "+result.infected_images
+      showPreviewButton.style.display = 'block';
 
   } catch (error) {
       console.error(error);
@@ -169,5 +170,5 @@ function renderData() {
 }
 
 window.onload = function () {
-  renderData(user_id);
+  renderData();
 };

@@ -17,7 +17,13 @@
 </head>
 
 <body>
-    <h1 class="mb-3">Image Upload Example</h1>
+    <div class="con">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+            <h1 class="mb-3">Image Upload Example</h1>
+            <button class="btn btn-primary logout-button" onclick="logout()" style="margin-right: 2%;">Logout</button>
+        </div>
+        
+        
     <form class="mb-3" id="upload-form">
         <div class="mb-3 form">
             <label class="form-label" for="image">Select an image to upload:</label>
@@ -25,7 +31,7 @@
         </div>
         <button class="btn btn-primary" type="submit">Upload</button>
     </form>
-    <div id="preview-container" class="mb-3">
+    <div id="preview-container" class="mb-3" style="display:none">
         <h3 id="preview" style="display:none">Preview:</h3>
         <p id="total" style="display: none;">Total RBC Found:</p>
         <p id="infected"  style="display:none">Infected RBC Found:</p>
@@ -41,6 +47,7 @@
     </div>
     <div id="container"></div>
     <script src="js/script.js"></script>
+    </div>
 </body>
 
 </html>
