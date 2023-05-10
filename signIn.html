@@ -6,6 +6,14 @@
 
         <link rel="header" href="header.html">
         <link rel="stylesheet" href="css/signIn.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/js/bootstrap.min.js"
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
+        ></script>
     </head>
 
     <body>
@@ -16,27 +24,27 @@
             </div>
         </div>
         
-        <div class = "container">
-            <div class = "form-box">
+        <div class = "containerr">
+            <div class = "form-boxx">
                 <h1 id="title">Sign Up</h1>
                 <form>
-                    <div class = "input-group">
-                        <div class = "input-field" id="nameField">
+                    <div class = "input-groupp">
+                        <div class = "input-fieldd" id="nameField">
                             <input type = "text" placeholder="Name" id="name">
                         </div>
 
-                        <div class = "input-field">
+                        <div class = "input-fieldd">
                             <input type = "email" id="username" placeholder="abc@xyz.com">
                         </div>
 
-                        <div class = "input-field">
+                        <div class = "input-fieldd">
                             <input type = "password" id="password" placeholder="Password">
                         </div>
 
-                        <p>Lost Password? <a href="#">Click Here!</a></p>
+                        <p onclick='showPopup("mar gara", 1)'>Lost Password? <a href="#">Click Here!</a></p>
                     </div>
 
-                    <div class="btn-field">
+                    <div class="btn-fieldd">
                         <button type="button" id="signUpBtn">Sign Up</button>
                         <button type="button" id="signInBtn" class="disabled">Sign In</button>
                     </div>
