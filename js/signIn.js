@@ -73,9 +73,9 @@ signInBtn.onclick = async () => {
         localStorage.setItem("token", token);
 
         // Redirect the user to the dashboard or home page
-        window.location.href = "/public/malaria-info.html";
+        window.location.href = "/index.html";
     } catch (error) {
-        alert("Wrong credentials, please try again!")
+        showPopup("Wrong credentials, please try again!", false)
         console.log(error);
         // Show an error message to the user
         // ...
@@ -127,14 +127,32 @@ signUpBtn.onclick = async function () {
         localStorage.setItem("token", token);
 
         // Redirect the user to the dashboard or home page
-        window.location.href = "/public/malaria-info.html";
+        window.location.href = "/index.html";
 
     } catch (error) {
-        alert("Something went wrong, please try again!")
+        showPopup("Something went wrong, please try again!", false)
         console.log(error);
         // Show an error message to the user
         // ...
     }
 
 
+}
+
+function showPopup(message, isSuccess) {
+    var popupOverlay = document.getElementById("popupOverlay");
+    var popupContent = document.getElementById("popupContent");
+
+    if (isSuccess) {
+        popupContent.innerHTML = "<p class='success-message'>" + message + "</p>";
+    } else {
+        popupContent.innerHTML = "<p class='failure-message'>" + message + "</p>";
+    }
+
+    popupOverlay.style.visibility = "visible";
+}
+
+function closePopup() {
+    var popupOverlay = document.getElementById("popupOverlay");
+    popupOverlay.style.visibility = "hidden";
 }

@@ -36,7 +36,7 @@ const logout = () => {
   localStorage.removeItem('token');
 
   // Redirect to the login page
-  window.location.href = '/public/signIn.html';
+  window.location.href = '/signIn.html';
 };
 
 const fetchApi = async (url, method = 'GET', body = null) => {
@@ -113,6 +113,8 @@ uploadForm.addEventListener('submit', async (event) => {
       document.getElementById("infected").textContent = "Total Infected RBC Found: "+result.infected_images
       showPreviewButton.style.display = 'block';
 
+      showPopup("Image uploaded successfully", true)
+
   } catch (error) {
       console.error(error);
   }
@@ -164,11 +166,29 @@ function renderData() {
       container.innerHTML = itemsHtml;
     })
     .catch(error => {
-      alert('You are not authorized to access this resource. Please log in to continue.');
-      window.location.href = '/public/signIn.html'; // redirect to login page
+      showPopup('You are not authorized to access this resource. Please log in to continue.', false);
+      window.location.href = '/signIn.html'; // redirect to login page
     });
 }
 
 window.onload = function () {
   renderData();
 };
+
+function showPopup(message, isSuccess) {
+  var popupOverlay = document.getElementById("popupOverlay");
+  var popupContent = document.getElementById("popupContent");
+
+  if (isSuccess) {
+      popupContent.innerHTML = "<p class='success-message'>" + message + "</p>";
+  } else {
+      popupContent.innerHTML = "<p class='failure-message'>" + message + "</p>";
+  }
+
+  popupOverlay.style.visibility = "visible";
+}
+
+function closePopup() {
+  var popupOverlay = document.getElementById("popupOverlay");
+  popupOverlay.style.visibility = "hidden";
+}
