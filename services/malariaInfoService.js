@@ -4,10 +4,12 @@ class MalariaInfoService {
     async createMalariaInfo(created_by, image) {
         const malariaInfo = new MalariaInfo({
           created_by,
-          total_images,
-          infected_images,
+          // total_images,
+          // infected_images,
+          infected,
           image,
         });
+        console.log(12, malariaInfo)
         await malariaInfo.save();
         return malariaInfo;
       }

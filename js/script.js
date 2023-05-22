@@ -101,16 +101,17 @@ uploadForm.addEventListener('submit', async (event) => {
       });
       
       const result = await response.json();
-      const total = document.getElementById("total")
-      total.style.display = 'block'
-      const infected = document.getElementById("infected")
-      infected.style.display = 'block'
+      const verdict = document.getElementById("verdict")
+      verdict.style.display = 'block'
+      // const infected = document.getElementById("infected")
+      // infected.style.display = 'block'
       const previewcontainer = document.getElementById("preview-container")
       previewcontainer.style.display = 'block'
       const showPreviewButton = document.querySelector('#preview-image');
 
-      document.getElementById("total").textContent = "Total RBC Found: "+result.total_images
-      document.getElementById("infected").textContent = "Total Infected RBC Found: "+result.infected_images
+      document.getElementById("verdict").textContent = "Verdict: "+result.infected
+      console.log(result)
+      // document.getElementById("infected").textContent = "Total Infected RBC Found: "+result.infected_images
       showPreviewButton.style.display = 'block';
 
       showPopup("Image uploaded successfully", true)
@@ -151,8 +152,7 @@ function renderData() {
                     <div class="col-md-8">
                       <div class="card-body">
                         <h5 class="card-title">${item.title}</h5>
-                        <p class="card-text">Total RBC found: ${item.total_images}</p>
-                        <p class="card-text">Predicted infected images: ${item.infected_images}</p>
+                        <p class="card-text">verdict: ${item.infected}</p>
                         <p class="card-text">Uploaded at: ${moment(item.createdAt).format("MMM D, YYYY h:mm A")}</p>
 
                       </div>

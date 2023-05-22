@@ -46,21 +46,22 @@ async function compressImage(inputBuffer, maxWidth = 300, quality = 50) {
 
 router.post('/', upload.single('image'), authMiddleware, async (req, res) => {
     try {
-        console.log(req.file)
+        // console.log(req.file)
         const buffer = req.file.buffer;
-        const prediction = await detectObjectsInImage(buffer)
+        const infected = true //await detectObjectsInImage(buffer)
         const malaria_info = new MalariaInfo({
             title:'image#'+await MalariaInfo.countDocuments(),
             created_by: new mongoose.Types.ObjectId(req.user._id),
-            total_images:prediction[0],
-            infected_images:prediction[1],
+            infected,
+            // total_images:prediction[0],
+            // infected_images:prediction[1],
             image:await compressImage(buffer)
         })
-
+        console.log(60, malaria_info)
         await malaria_info.save();
         res.status(200).send(malaria_info)
     } catch (error) {
-        console.log(41, error);
+        // console.log(41, error);
         res.status(400).send(error.message);
     }
 });
@@ -69,7 +70,8 @@ router.post('/', upload.single('image'), authMiddleware, async (req, res) => {
 router.get('/', cors(),authMiddleware, async (req, res) => {
     try {
         const userId = req.user._id
-        console.log(userId)
+        // console.log(userId)
+
         const malariaInfo = await MalariaInfoService.getMalariaInfoByUserId(userId);
         if (malariaInfo) {
             res.json(malariaInfo);
