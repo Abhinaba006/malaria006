@@ -5,7 +5,7 @@ const sharp = require('sharp');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const MalariaInfoService = require('../services/malariaInfoService');
-const detectObjectsInImage = require('../modelHelper');
+const predictImage = require('../modelHelper');
 const MalariaInfo = require('../models/malaria_info');
 
 
@@ -39,16 +39,14 @@ async function compressImage(inputBuffer, maxWidth = 300, quality = 50) {
         .toBuffer();
       return compressedBuffer;
     } catch (err) {
-      console.error(err);
       throw err;
     }
   }
 
 router.post('/', upload.single('image'), authMiddleware, async (req, res) => {
     try {
-        // console.log(req.file)
         const buffer = req.file.buffer;
-        const infected = true //await detectObjectsInImage(buffer)
+        const infected = await predictImage(buffer)
         const malaria_info = new MalariaInfo({
             title:'image#'+await MalariaInfo.countDocuments(),
             created_by: new mongoose.Types.ObjectId(req.user._id),
@@ -57,11 +55,9 @@ router.post('/', upload.single('image'), authMiddleware, async (req, res) => {
             // infected_images:prediction[1],
             image:await compressImage(buffer)
         })
-        console.log(60, malaria_info)
         await malaria_info.save();
         res.status(200).send(malaria_info)
     } catch (error) {
-        // console.log(41, error);
         res.status(400).send(error.message);
     }
 });
@@ -70,7 +66,6 @@ router.post('/', upload.single('image'), authMiddleware, async (req, res) => {
 router.get('/', cors(),authMiddleware, async (req, res) => {
     try {
         const userId = req.user._id
-        // console.log(userId)
 
         const malariaInfo = await MalariaInfoService.getMalariaInfoByUserId(userId);
         if (malariaInfo) {
@@ -79,7 +74,6 @@ router.get('/', cors(),authMiddleware, async (req, res) => {
             res.status(404).send('Malaria Info not found');
         }
     } catch (error) {
-        console.error(error);
         res.status(500).send('Server Error');
     }
 });
@@ -91,7 +85,6 @@ router.get('/', cors(),authMiddleware, async (req, res) => {
 //       const malariaInfo = await MalariaInfoService.createMalariaInfo(created_by, image);
 //       res.json(malariaInfo);
 //     } catch (err) {
-//       console.error(err);
 //       res.status(500).send('Server Error');
 //     }
 //   });
@@ -110,7 +103,6 @@ router.get('/', cors(),authMiddleware, async (req, res) => {
 //     await malariaInfo.save();
 
 //   } catch (error) {
-//     console.error(error);
 //     res.status(500).send('Server Error');
 //   }
 // });
@@ -126,7 +118,6 @@ router.delete('/:id', cors(),authMiddleware, async (req, res) => {
             res.status(404).send('Malaria Info not found');
         }
     } catch (error) {
-        console.error(error);
         res.status(500).send('Server Error');
     }
 });

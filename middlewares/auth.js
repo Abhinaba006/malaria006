@@ -8,7 +8,6 @@ const authMiddleware = async (req, res, next) => {
     const decoded = jwt.verify(token, 'secret-key');
     const user = await User.findOne({ _id: decoded.userId});
 
-    console.log(decoded)
     if (!user) {
       throw new Error("No user found");
     }
@@ -17,7 +16,6 @@ const authMiddleware = async (req, res, next) => {
     req.token = token;
     next();
   } catch (e) {
-    console.log(e)
     res.status(401).send({ error: 'Please authenticate.' });
   }
 };
